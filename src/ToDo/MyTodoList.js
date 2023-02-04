@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import "./style.css";
 const getLocalData = () => {
   const lists = 0;
@@ -50,6 +51,9 @@ const MyTodoList = () => {
         body: JSON.stringify(data),
       });
       const itemdata = await res.json();
+      // notify("task added succesfull")
+      notify(itemdata, toast.success);
+
       return itemdata;
     } catch (error) {
       console.error("Error adding data: ", error);
@@ -66,6 +70,7 @@ const MyTodoList = () => {
         body: JSON.stringify(data),
       });
       const itemdata = await res.json();
+      notify(itemdata, toast.success);
       return itemdata;
     } catch (error) {
       console.error("Error adding data: ", error);
@@ -82,6 +87,7 @@ const MyTodoList = () => {
         body: JSON.stringify(data),
       });
       const itemdata = await res.json();
+      notify(itemdata, toast.success);
       return itemdata;
     } catch (error) {
       console.error("Error adding data: ", error);
@@ -158,6 +164,17 @@ const MyTodoList = () => {
     setItems([]);
   };
 
+  const notify = (smg,code) =>code(smg, {
+    position: "top-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "light",
+    });
+
   return (
     <>
       <div className="main-div">
@@ -208,6 +225,7 @@ const MyTodoList = () => {
           </div>
         </div>
       </div>
+      <ToastContainer />
     </>
   );
 };
