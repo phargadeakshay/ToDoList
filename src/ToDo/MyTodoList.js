@@ -1,3 +1,7 @@
+// not done today 
+// node module file not attache to this labtest file plz download it
+
+
 import React, { useState, useEffect } from "react";
 
 import "./style.css";
@@ -5,7 +9,7 @@ import "./style.css";
 // get the localStorage data back
 const getLocalData = () => {
   // const lists = localStorage.getItem("mytodolist");
-  const lists = 0;
+const lists=0;
   if (lists) {
     return JSON.parse(lists);
   } else {
@@ -18,46 +22,55 @@ const MyTodoList = () => {
   const [items, setItems] = useState(getLocalData());
   const [isEditItem, setIsEditItem] = useState("");
   const [toggleButton, setToggleButton] = useState(false);
-  const baseURL = "http://localhost:8003/getalltodolist";
+  const baseURL = "http://localhost:8003/getalltodolist"
   useEffect(() => {
-    getAllData();
+ 
+    getAllData()
   }, []);
 
-  const getAllData = async () => {
-    try {
-      const res = await fetch(`${baseURL}`, {
-        method: "GET",
-        mode: "cors",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      const itemdata = await res.json();
-      console.log(itemdata, "hjj");
+
+  const getAllData = async()=>{
+  
+   
+   try {
+     const res = await fetch(`${baseURL}`, {
+         method: "GET",
+         mode: "cors",
+         headers: {
+           "Content-Type": "application/json",
+         },
+       });
+       const itemdata = await res.json();
+       console.log(itemdata,"hjj")
       //  return itemdata;
-      console.log(itemdata);
-      setItems(itemdata);
-    } catch (error) {
-      console.error("Error adding data: ", error);
-    }
-  };
+      console.log(itemdata)
+       setItems(itemdata)
+ } catch (error) {
+   console.error("Error adding data: ", error);
+ }
+  }
+
 
   const saveData = async (data) => {
     try {
-      const res = await fetch(`${baseURL}`, {
-        method: "POST",
-        mode: "cors",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-      const itemdata = await res.json();
-      return itemdata;
+        const res = await fetch(`${baseURL}`, {
+            method: "POST",
+            mode: "cors",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+          });
+          const itemdata = await res.json();
+          return itemdata;
     } catch (error) {
       console.error("Error adding data: ", error);
     }
   };
+
+
+
+
 
   // add the items fucnction
   const addItem = () => {
@@ -82,8 +95,8 @@ const MyTodoList = () => {
         taskname: inputdata,
       };
       setItems([...items, myNewInputData]);
-      saveData(myNewInputData);
-      getAllData();
+      saveData(myNewInputData)
+      getAllData()
       setInputData("");
     }
   };
@@ -118,40 +131,39 @@ const MyTodoList = () => {
 
   return (
     <>
-      <div >
-        <div >
-          <div>
-            <p >Add Your List Here😊</p>
-          </div>
-          <div >
+      <div className="main-div">
+        <div className="child-div">
+        <div>
+           
+           <p className="headingtitle">Add Your List Here😊</p>
+         </div>
+          <div className="addItems">
             <input
               type="text"
               placeholder="✍ Add Item"
-              
+              className="form-control"
               value={inputdata}
               onChange={(event) => setInputData(event.target.value)}
             />
             {toggleButton ? (
-              <span  onClick={addItem}></span>
+              <i className="far fa-edit add-btn" onClick={addItem}></i>
             ) : (
-              <span  onClick={addItem}>Add</span>
+              <i className="fa fa-plus add-btn" onClick={addItem}></i>
             )}
           </div>
           {/* show our items  */}
-          <div >
+          <div className="showItems">
             {items.map((curElem) => {
               return (
-                <div key={curElem.taskid}>
+                <div className="eachItem" key={curElem.taskid}>
                   <h3>{curElem.taskname}</h3>
-                  <div >
-                    <p
-                     
-                      onClick={() => editItem(curElem.taskid)}
-                    >edit</p>
-                    <p
-                    
-                      onClick={() => deleteItem(curElem.taskid)}
-                    >Del</p>
+                  <div className="todo-btn">
+                    <i
+                      className="far fa-edit add-btn"
+                      onClick={() => editItem(curElem.taskid)}></i>
+                    <i
+                      className="far fa-trash-alt add-btn"
+                      onClick={() => deleteItem(curElem.taskid)}></i>
                   </div>
                 </div>
               );
@@ -159,12 +171,11 @@ const MyTodoList = () => {
           </div>
 
           {/* rmeove all button  */}
-          <div >
+          <div className="showItems">
             <button
-              
-             
-              onClick={removeAll}
-            >
+              className="btn btneffect"
+              data-sm-link-text="Remove All"
+              onClick={removeAll}>
               <span> CHECK LIST</span>
             </button>
           </div>
