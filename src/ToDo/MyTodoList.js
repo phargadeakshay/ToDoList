@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
 
+import "./style.css";
+
+// get the localStorage data back
 const getLocalData = () => {
-  const lists = localStorage.getItem("mytodolist");
-  // const lists = 0;
+  // const lists = localStorage.getItem("mytodolist");
+  const lists = 0;
   if (lists) {
     return JSON.parse(lists);
   } else {
@@ -15,10 +18,51 @@ const MyTodoList = () => {
   const [items, setItems] = useState(getLocalData());
   const [isEditItem, setIsEditItem] = useState("");
   const [toggleButton, setToggleButton] = useState(false);
+  const baseURL = "http://localhost:8003/getalltodolist";
+  useEffect(() => {
+    getAllData();
+  }, []);
+
+  const getAllData = async () => {
+    try {
+      const res = await fetch(`${baseURL}`, {
+        method: "GET",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const itemdata = await res.json();
+      console.log(itemdata, "hjj");
+      //  return itemdata;
+      console.log(itemdata);
+      setItems(itemdata);
+    } catch (error) {
+      console.error("Error adding data: ", error);
+    }
+  };
+
+  const saveData = async (data) => {
+    try {
+      const res = await fetch(`${baseURL}`, {
+        method: "POST",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      const itemdata = await res.json();
+      return itemdata;
+    } catch (error) {
+      console.error("Error adding data: ", error);
+    }
+  };
+
   // add the items fucnction
   const addItem = () => {
     if (!inputdata) {
-      alert("please enter the data");
+      alert("plz fill the data");
     } else if (inputdata && toggleButton) {
       setItems(
         items.map((curElem) => {
@@ -37,7 +81,9 @@ const MyTodoList = () => {
         taskid: new Date().getTime().toString(),
         taskname: inputdata,
       };
-      setItems([...items, myNewInputData]); 
+      setItems([...items, myNewInputData]);
+      saveData(myNewInputData);
+      getAllData();
       setInputData("");
     }
   };
