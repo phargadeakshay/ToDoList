@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import "./style.css";
+import "./TodoStyle.css";
 const getLocalData = () => {
   const lists = 0;
   if (lists) {
@@ -16,7 +16,7 @@ const MyTodoList = () => {
   const [items, setItems] = useState(getLocalData());
   const [isEditItem, setIsEditItem] = useState("");
   const [toggleButton, setToggleButton] = useState(false);
-  const baseURL = "http://localhost:8003/getalltodolist";
+  const baseURL = "https://todoendpoints.onrender.com/getalltodolist";
   useEffect(() => {
     getAllData();
   }, []);
@@ -70,7 +70,9 @@ const MyTodoList = () => {
         body: JSON.stringify(data),
       });
       const itemdata = await res.json();
-      notify(itemdata, toast.success);
+      if(itemdata){
+        notify(itemdata, toast.success);
+      }
       return itemdata;
     } catch (error) {
       console.error("Error adding data: ", error);
@@ -99,20 +101,23 @@ const MyTodoList = () => {
     if (!inputdata) {
       alert("please Enterthe data");
     } else if (inputdata && toggleButton) {
+      setItems(
       items.map((curElem) => {
-        if (isEditItem) {
-          console.log(inputdata, "o", isEditItem, curElem.taskid);
+
+        // console.log(inputdata, "o", isEditItem,typeof(isEditItem), curElem.taskid,typeof(curElem.taskid));
+        if (curElem.taskid === isEditItem) { //if there is index in isEditItem
+          // console.log(curElem,"qqqqqqqqq")
           const editedData = {
             taskid: isEditItem,
             taskname: inputdata,
           };
-          updateData(editedData);
-          getAllData();
-          return { ...curElem, taskname: inputdata };
+          updateData(editedData);  
+          // getAllData();
+          return editedData;
         }
         return curElem;
-      });
-
+      })
+      )
       setInputData("");
       setIsEditItem(null);
       setToggleButton(false);
@@ -123,7 +128,7 @@ const MyTodoList = () => {
       };
       setItems([...items, myNewInputData]);
       saveData(myNewInputData);
-      getAllData();
+      // getAllData();
       setInputData("");
     }
   };
@@ -143,7 +148,7 @@ const MyTodoList = () => {
       taskid: isEditItem,
       taskname: inputdata,
     };
-    updateData(editedData);
+    // updateData(editedData);
     getAllData();
   };
 
@@ -180,12 +185,12 @@ const MyTodoList = () => {
       <div className="main-div">
         <div className="child-div">
           <div>
-            <p className="headingtitle">Add Your List Here😊</p>
+            <p className="headingtitle headtop">Add Your List Here😊</p>
           </div>
           <div className="addItems">
             <input
               type="text"
-              placeholder="✍ Add Item"
+              placeholder="Add Task"
               className="form-control"
               value={inputdata}
               onChange={(event) => setInputData(event.target.value)}
